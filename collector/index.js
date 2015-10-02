@@ -21,8 +21,8 @@ Q.nfcall(function(){
                 states: states
             };
         }).then(function (res) {
-            var fs = require('fs');
-            return Q.ninvoke(fs, 'writeFile', 'apndata_'+res.week._codSemana+'.json', JSON.stringify(res, null, 2));
+            //var fs = require('fs');
+            //return Q.ninvoke(fs, 'writeFile', 'apndata_'+res.week._codSemana+'.json', JSON.stringify(res, null, 2));
         });
     });
 }).catch(function(err){
