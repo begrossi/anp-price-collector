@@ -12,8 +12,8 @@ var config = {
     db: {
         url: {
             $filter: 'env',
-            test: 'mongodb://localhost:27017/an-price-collector-test',
-            $default: 'mongodb://localhost:27017/an-price-collector'
+            test: 'mongodb://localhost:27017/anp-price-collector-test',
+            $default: 'mongodb://localhost:27017/anp-price-collector'
         }
     },
     port: {

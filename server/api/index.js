@@ -67,7 +67,9 @@ exports.register = function (server, options, next) {
         },
         handler: function (request, reply) {
             console.log(request.payload);
-            reply({ message: 'Welcome' });
+
+
+            reply({ result: 'success' });
         }
     });
 

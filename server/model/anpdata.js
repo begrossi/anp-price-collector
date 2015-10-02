@@ -43,10 +43,10 @@ var citySchema = new Schema({
     stations: [stationSchema]
 });
 
-var weeklyStateDataSchema = new Schema({
+var anpdataSchema = new Schema({
     week: {type:String, required: true, index: true},
     state: {type:String, required: true, index: true},
     cities: [citySchema]
 });
 
-var collectedData = module.exports = mongoose.model('collectedData', collectedDataSchema);
+var anpdata = module.exports = mongoose.model('anpdata', anpdataSchema);

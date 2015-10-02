@@ -16,7 +16,7 @@ mongoose.set('debug', true);
 
 exports.mongoose=mongoose;
 
-['state','station','collectedData'].forEach(function(key){
+['week','state','station','anpdata'].forEach(function(key){
     var nkey = key[0].toUpperCase()+key.substr(1);
     exports[nkey] = require('./'+key);
-})
+});

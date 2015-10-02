@@ -24,6 +24,7 @@ var manifest = {
         labels: ['api']
     }],
     plugins: {
+        './api/server_methods': {},
         './api/index': {}
     }
 };
