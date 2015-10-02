@@ -2,6 +2,8 @@ var Q=require('q');
 var _=require('underscore');
 var utils=require('./utils');
 var winston = require('winston');
+var config = require('./config');
+var endpoint = config.get('/endpoint');
 
 Q.nfcall(function(){
     return getInitialData().then(function(data) {
@@ -20,7 +22,7 @@ Q.nfcall(function(){
             };
         }).then(function (res) {
             var fs = require('fs');
-            return Q.ninvoke(fs, 'writeFile', 'res.json', JSON.stringify(res, null, 2));
+            return Q.ninvoke(fs, 'writeFile', 'apndata_'+res.week._codSemana+'.json', JSON.stringify(res, null, 2));
         });
     });
 }).catch(function(err){
@@ -63,7 +65,13 @@ function processStates(week, data) {
                     return sum + _.size(city.stations)
                 }, 0) + ' postos: ' + _.pluck(res.cities, 'name').join(', '));
 
-            return res;
+            var data = _.extend({week:week}, res);
+            //winston.info(JSON.stringify(data,null,1));
+            return utils.put(endpoint, data, true).then(function(){
+                winston.info(estado.text+' enviado para o servidor.');
+
+                return res;
+            });
         });
     }));
 }
@@ -200,11 +208,11 @@ function getStations(codSemana, codType, type, codCity) {
                 type: type,
             };
             _.each(['sellPrice','buyPrice'], function(colname){
-                station.price[colname]=utils.getFloatBR($col.text())||'-';
+                station.price[colname]=utils.getFloatBR($col.text());
                 $col=$col.next();
             });
             _.each(['saleMode','provider'], function(colname){
-                station.price[colname]=$col.text();
+                $col.text()!='-' && (station.price[colname]=$col.text());
                 $col=$col.next();
             });
             station.price.date = utils.getDateBR($col.text());

@@ -37,33 +37,38 @@ exports.get=function(url, doNotParse, _i) {
         return Q.reject(err);
     });
 };
-exports.post=function(url, form, doNotParse, _i) {
-    return request({
-        method: 'POST',
-        url: url,
-        form: form,
-        encoding: null,
-        timeout: 200000,
-        gzip: true
-    }).spread(function(response, body){
-        if (response.statusCode != 200) {
-            return Q.reject(response.statusCode);
-        }
-        body = iconv.decode(body, 'iso-8859-1');
-        if(doNotParse)
-            return body;
 
-        return cheerio.load(body,{ignoreWhitespace: true, xmlMode: false});
-    }).catch(function(err){
-        if(err && err.code=='ECONNRESET' && !(_i || _i<10)) {
-            winston.warn('[utils.post] trying to recover from ECONNRESET for url '+url +', form='+JSON.stringify(form));
-            return Q.delay(5000).then(function(){
-                return exports.post(url, doNotParse, (_i||0)+1);
-            });
-        }
-        return Q.reject(err);
-    });
-};
+['POST','PUT'].forEach(function(method){
+    var fname = method.toLowerCase();
+    exports[fname]=function(url, form, useJSON, doNotParse, _i) {
+        return request({
+            method: method,
+            url: url,
+            form: !useJSON?form:undefined,
+            json: useJSON?form:undefined,
+            encoding: null,
+            timeout: 200000,
+            gzip: true
+        }).spread(function(response, body){
+            if (response.statusCode != 200) {
+                return Q.reject(response.statusCode);
+            }
+            body = iconv.decode(body, 'iso-8859-1');
+            if(doNotParse)
+                return body;
+
+            return cheerio.load(body,{ignoreWhitespace: true, xmlMode: false});
+        }).catch(function(err){
+            if(err && err.code=='ECONNRESET' && !(_i || _i<10)) {
+                winston.warn('[utils.'+fname+'] trying to recover from ECONNRESET for url '+url +', form='+JSON.stringify(form));
+                return Q.delay(5000).then(function(){
+                    return exports.post(url, doNotParse, (_i||0)+1);
+                });
+            }
+            return Q.reject(err);
+        });
+    };
+});
 
 exports.getSelectOptions=function($html, selector) {
     return $html(selector+' option').map(function(i, option){
@@ -88,7 +93,8 @@ exports.getInt=function(text) {
 }
 exports.getFloatBR=function(text) {
     try {
-        return parseFloat(text.replace(',','.'));
+        var f = parseFloat(text.replace(',','.'))
+        return (f || f==0) ? f : undefined;
     } catch(e) {
         //return undefined
     }

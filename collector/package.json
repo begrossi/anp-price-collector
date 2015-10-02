@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^0.19.0",
+    "confidence": "^1.4.2",
     "hapi": "^10.1.0",
     "iconv-lite": "^0.4.12",
     "moment": "^2.10.6",

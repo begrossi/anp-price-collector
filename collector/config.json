@@ -1,6 +1,0 @@
-{
-  api: {
-    endpoint: 'https://localhost:3000/api',
-    key: 'teste'
-  }
-}
