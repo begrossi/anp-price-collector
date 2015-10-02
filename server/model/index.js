@@ -1,6 +1,7 @@
 var mongoose   = require('mongoose');
 var winston = require('winston');
-var uri = require('../config.json').db.url;
+var Config = require('../config');
+var uri = Config.get('/db/url');
 
 mongoose.connect(uri, function(err){
     if(!err) {
