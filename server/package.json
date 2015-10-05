@@ -19,6 +19,7 @@
   },
   "homepage": "",
   "dependencies": {
+    "boom": "^2.9.0",
     "confidence": "^1.x.x",
     "glue": "^2.x.x",
     "hapi": "^9.x.x",

@@ -56,7 +56,7 @@ function getInitialData() {
 }
 
 function processStates(week, data) {
-    return Q.all(_.map(data.estados, function (estado) { //faz assincronamente cada estado!
+    return Q.all(_.map(_.first(data.estados,1), function (estado) { //faz assincronamente cada estado!
         //espera um tempo aleatório para espaçar mais as requisições...
         return Q.delay(utils.randomIntInc(500, 2500)).then(function () {
             return getStateData(week, estado, data.combustiveis, data.inputValues);
@@ -65,7 +65,7 @@ function processStates(week, data) {
                     return sum + _.size(city.stations)
                 }, 0) + ' postos: ' + _.pluck(res.cities, 'name').join(', '));
 
-            var data = _.extend({week:week}, res);
+            var data = {week:week, state: res};
             //winston.info(JSON.stringify(data,null,1));
             return utils.put(endpoint, data, true).then(function(){
                 winston.info(estado.text+' enviado para o servidor.');

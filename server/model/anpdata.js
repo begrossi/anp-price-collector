@@ -37,7 +37,7 @@ var stationSchema = new Schema({
 });
 
 var citySchema = new Schema({
-    _id:  {type:String, required:true, index:true},
+    _codCity:  {type:String, required:true, index:true},
     name: {type:String, required:true, index:true},
     statistics: [statisticsSchema],
     stations: [stationSchema]
@@ -48,5 +48,7 @@ var anpdataSchema = new Schema({
     state: {type:String, required: true, index: true},
     cities: [citySchema]
 });
+
+anpdataSchema.index({week: 1, state: 1}, {unique: true});
 
 var anpdata = module.exports = mongoose.model('anpdata', anpdataSchema);

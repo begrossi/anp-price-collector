@@ -6,5 +6,5 @@ Q.nfcall(Composer).then(function(server){
         console.log('Started the api on port ' + server.info.port);
     });
 }).catch(function(err){
-    console.error(err);
+    console.error('[server]',err&&err.stack||err);
 }).done();
